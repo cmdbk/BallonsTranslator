@@ -1,10 +1,13 @@
 帮原作者做了个MAC版懒人下载器，两个条件满足就能用：
+
 1.提前装好Homebrew就能用。
+
 2.请全程联网并挂上稳定靠谱的梯子，
 
 随缘更新，软件本身的用法看原发布页
 
 指路：
+
 windows版：
 https://github.com/dmMaze/BallonsTranslator/releases
 
