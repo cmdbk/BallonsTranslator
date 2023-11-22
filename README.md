@@ -14,4 +14,4 @@ windows版：
 https://github.com/dmMaze/BallonsTranslator/releases
 
 Mac版：
-https://github.com/chumendabiaoke/BallonsTranslator_Simplify/releases
+https://github.com/cmdbk/BallonsTranslator/releases
