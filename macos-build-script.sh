@@ -30,22 +30,6 @@ else
     fi
 fi
 
-# OpenCV installation check
-echo "STEP 3: Check installation of OpenCV."
-echo "INFO: Install OpenCV Python package in virtual environment."
-pip3 install opencv-python
-echo "INFO: Checking OpenCV installation..."
-python3 -c "import cv2" 2>/dev/null
-if [ $? -eq 0 ]; then
-    opencv_version=$(python3 -c "import cv2; print(cv2.__version__)")
-    echo "INFO: ✅ OpenCV is installed. Version: $opencv_version"
-else
-    echo "ERROR: ❌ OpenCV is not installed."
-    echo "ERROR: Please install OpenCV before running this script."
-    echo "INFO: Recommand install via Homebrew with command 'brew install opencv'."
-    exit 1
-fi
-}
 # Function to thin libraries based on system architecture
 thin_liarary_files() {
     local arch=$(uname -m)
@@ -72,32 +56,6 @@ thin_liarary_files() {
 # Call the download functions
 download_and_process_files
 thin_liarary_files
-
-# Checklist of extra data files
-check_list="
-data/alphabet-all-v5.txt
-$LIBS_DIR/libopencv_world.4.4.0.dylib
-$LIBS_DIR/libpatchmatch_inpaint.dylib
-$MODELS_DIR/aot_inpainter.ckpt
-$MODELS_DIR/comictextdetector.pt
-$MODELS_DIR/comictextdetector.pt.onnx
-$MODELS_DIR/lama_mpe.ckpt
-$MANGA_OCR_BASE_DIR/README.md
-$MANGA_OCR_BASE_DIR/config.json
-$MANGA_OCR_BASE_DIR/preprocessor_config.json
-$MANGA_OCR_BASE_DIR/pytorch_model.bin
-$MANGA_OCR_BASE_DIR/special_tokens_map.json
-$MANGA_OCR_BASE_DIR/tokenizer_config.json
-$MANGA_OCR_BASE_DIR/vocab.txt
-$MODELS_DIR/mit32px_ocr.ckpt
-$MODELS_DIR/mit48pxctc_ocr.ckpt
-$POSTAG_DIR/features.pkl
-$POSTAG_DIR/weights.npz
-$SPACY_ONTONOTES_DIR
-$SPACY_ONTONOTES_DIR/features.msgpack
-$SPACY_ONTONOTES_DIR/weights.npz
-data/pkusegscores.json
-"
 
 # Validate extra data files exist
 echo "STEP 5: Validate data files exist."
