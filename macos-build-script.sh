@@ -1,3 +1,8 @@
+# Clone repository
+echo "STEP 1: Clone repository."
+git clone -b dev https://github.com/dmMaze/BallonsTranslator.git
+cd BallonsTranslator
+
 # Define directories
 DATA_DIR='data'
 LIBS_DIR='data/libs'
@@ -6,6 +11,15 @@ MANGA_OCR_BASE_DIR='data/models/manga-ocr-base'
 PKUSEG_DIR='data/models/pkuseg'
 POSTAG_DIR='data/models/pkuseg/postag'
 SPACY_ONTONOTES_DIR='data/models/pkuseg/spacy_ontonotes'
+
+# Check and make directories
+mkdir -p "$DATA_DIR"
+mkdir -p "$LIBS_DIR"
+mkdir -p "$MODELS_DIR" 
+mkdir -p "$MANGA_OCR_BASE_DIR"
+mkdir -p "$PKUSEG_DIR"
+mkdir -p "$POSTAG_DIR"
+mkdir -p "$SPACY_ONTONOTES_DIR"
 
 # Create and activate Python virtual environment
 echo "STEP 2: Create and activate Python virtual environment"
@@ -29,6 +43,121 @@ else
         exit 1
     fi
 fi
+
+# OpenCV installation check
+echo "STEP 3: Check installation of OpenCV."
+echo "INFO: Install OpenCV Python package in virtual environment."
+pip3 install opencv-python
+echo "INFO: Checking OpenCV installation..."
+python3 -c "import cv2" 2>/dev/null
+if [ $? -eq 0 ]; then
+    opencv_version=$(python3 -c "import cv2; print(cv2.__version__)")
+    echo "INFO: ✅ OpenCV is installed. Version: $opencv_version"
+else
+    echo "ERROR: ❌ OpenCV is not installed."
+    echo "ERROR: Please install OpenCV before running this script."
+    echo "INFO: Recommand install via Homebrew with command 'brew install opencv'."
+    exit 1
+fi
+
+# Download extra data files
+echo "STEP 4: Download data files."
+
+# Function to calculate file hash
+calculate_hash() {
+    local file_path=$1
+    shasum -a 256 "$file_path" | cut -d ' ' -f 1
+}
+
+# Function to download and process files
+download_and_process_files() {
+    local files=(
+        'postag.zip|https://github.com/lancopku/pkuseg-python/releases/download/v0.0.16|zip|features.pkl|features.pkl|data/models/pkuseg/postag|17d734c186a0f6e76d15f4990e766a00eed5f72bea099575df23677435ee749d'
+        'postag.zip|https://github.com/lancopku/pkuseg-python/releases/download/v0.0.16|zip|weights.npz|weights.npz|data/models/pkuseg/postag|2bbd53b366be82a1becedb4d29f76296b36ad7560b6a8c85d54054900336d59a'
+        'spacy_ontonotes.zip|https://github.com/explosion/spacy-pkuseg/releases/download/v0.0.26|zip|features.msgpack|features.msgpack|data/models/pkuseg/spacy_ontonotes|fd4322482a7018b9bce9216173ae9d2848efe6d310b468bbb4383fb55c874a18'
+        'spacy_ontonotes.zip|https://github.com/explosion/spacy-pkuseg/releases/download/v0.0.26|zip|weights.npz|weights.npz|data/models/pkuseg/spacy_ontonotes|5ada075eb25a854f71d6e6fa4e7d55e7be0ae049255b1f8f19d05c13b1b68c9e'
+        )
+        
+    # Iterate through file information
+    for file_info in "${files[@]}"; do
+        IFS='|' read -r -a file_data <<< "$file_info"
+        source_file="${file_data[0]}"
+        source_file_base_url="${file_data[1]}"
+        is_zip="${file_data[2]}"
+        unzip_file="${file_data[3]}"
+        target_file="${file_data[4]}"
+        target_dir="${file_data[5]}"
+        target_file_expected_hash="${file_data[6]}"
+        
+        # Combine source file and base URL to get download URL
+        local download_url="$source_file_base_url/$source_file"
+        
+        # Check if target_file exists and verify hash if it does
+        if [ -e "$target_dir/$target_file" ]; then
+            echo "INFO: $target_file already exists, verifying hash..."
+            computed_hash=$(calculate_hash "$target_dir/$target_file")
+            if [ "$computed_hash" == "$target_file_expected_hash" ]; then
+                echo "INFO: ✅ Existing $target_file hash verification passed."
+                continue
+            else
+                echo "WARNING: ❌ Existing $target_file hash verification failed."
+                rm -rf "$target_dir/$target_file"
+            fi
+        fi
+            
+        # Download and process accordingly based on is_zip and unzip_file
+        echo "INFO: Downloading $target_file..."
+        if [[ "$is_zip" == "zip" ]]; then
+            curl -L "$download_url" -o "$source_file"
+            unzip -j "$source_file" "$unzip_file" -d "$target_dir"
+            if [ "$unzip_file" != "$target_file" ]; then
+                # Rename the file
+                mv "$target_dir/$unzip_file" "$target_dir/$target_file"
+            fi
+            rm -rf "$source_file"
+        else
+            curl -L "$download_url" -o "$target_dir/$target_file"
+        fi
+        
+        # Calculate hash after download and processing
+        downloaded_file_hash=$(calculate_hash "$target_dir/$target_file")
+    
+        # Check if hash matches expected hash
+        if [ "$downloaded_file_hash" == "$target_file_expected_hash" ]; then
+            echo "INFO: ✅ Downloaded $target_file hash verification passed."
+            continue
+        else
+            echo "WARNING: ❌ Downloaded $target_file hash verification failed."
+            # Remove the existing file
+            rm -f "$target_dir/$target_file"
+
+            # Redownload the file
+            if [[ "$is_zip" == "zip" ]]; then
+                curl -L "$download_url" -o "$source_file"
+                unzip -j "$source_file" "$unzip_file" -d "$target_dir"
+                if [ "$unzip_file" != "$target_file" ]; then
+                    mv "$target_dir/$unzip_file" "$target_dir/$target_file"
+                fi
+                rm -f "$source_file"
+            else
+                curl -L "$download_url" -o "$target_dir/$target_file"
+            fi
+            
+            # Calculate hash after re-download
+            redownloaded_file_hash=$(calculate_hash "$target_dir/$target_file")
+            
+            # Check if hash matches expected hash after re-download
+            if [ "$redownloaded_file_hash" == "$target_file_expected_hash" ]; then
+                echo "INFO: ✅ Re-downloaded $target_file hash verification passed."
+                continue
+            else
+                echo "WARNING: ❌ Re-downloaded $target_file hash verification failed."
+                echo "ERROR: ❌ Unable to download $target_file. Exiting."
+                exit 1
+            fi
+        fi
+    done
+}
 
 # Function to thin libraries based on system architecture
 thin_liarary_files() {
@@ -56,6 +185,32 @@ thin_liarary_files() {
 # Call the download functions
 download_and_process_files
 thin_liarary_files
+
+# Checklist of extra data files
+check_list="
+data/alphabet-all-v5.txt
+$LIBS_DIR/libopencv_world.4.4.0.dylib
+$LIBS_DIR/libpatchmatch_inpaint.dylib
+$MODELS_DIR/aot_inpainter.ckpt
+$MODELS_DIR/comictextdetector.pt
+$MODELS_DIR/comictextdetector.pt.onnx
+$MODELS_DIR/lama_mpe.ckpt
+$MANGA_OCR_BASE_DIR/README.md
+$MANGA_OCR_BASE_DIR/config.json
+$MANGA_OCR_BASE_DIR/preprocessor_config.json
+$MANGA_OCR_BASE_DIR/pytorch_model.bin
+$MANGA_OCR_BASE_DIR/special_tokens_map.json
+$MANGA_OCR_BASE_DIR/tokenizer_config.json
+$MANGA_OCR_BASE_DIR/vocab.txt
+$MODELS_DIR/mit32px_ocr.ckpt
+$MODELS_DIR/mit48pxctc_ocr.ckpt
+$POSTAG_DIR/features.pkl
+$POSTAG_DIR/weights.npz
+$SPACY_ONTONOTES_DIR
+$SPACY_ONTONOTES_DIR/features.msgpack
+$SPACY_ONTONOTES_DIR/weights.npz
+data/pkusegscores.json
+"
 
 # Validate extra data files exist
 echo "STEP 5: Validate data files exist."
