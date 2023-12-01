@@ -1,5 +1,5 @@
 # Clone repository
-echo "STEP 1: Clone repository."
+echo "STEP 1: Open repository folder."
 cd BallonsTranslator
 
 # Define directories
@@ -76,49 +76,6 @@ thin_liarary_files() {
 # Call the download functions
 download_and_process_files
 thin_liarary_files
-
-# Checklist of extra data files
-check_list="
-data/alphabet-all-v5.txt
-$LIBS_DIR/libopencv_world.4.4.0.dylib
-$LIBS_DIR/libpatchmatch_inpaint.dylib
-$MODELS_DIR/aot_inpainter.ckpt
-$MODELS_DIR/comictextdetector.pt
-$MODELS_DIR/comictextdetector.pt.onnx
-$MODELS_DIR/lama_mpe.ckpt
-$MANGA_OCR_BASE_DIR/README.md
-$MANGA_OCR_BASE_DIR/config.json
-$MANGA_OCR_BASE_DIR/preprocessor_config.json
-$MANGA_OCR_BASE_DIR/pytorch_model.bin
-$MANGA_OCR_BASE_DIR/special_tokens_map.json
-$MANGA_OCR_BASE_DIR/tokenizer_config.json
-$MANGA_OCR_BASE_DIR/vocab.txt
-$MODELS_DIR/mit32px_ocr.ckpt
-$MODELS_DIR/mit48pxctc_ocr.ckpt
-$POSTAG_DIR/features.pkl
-$POSTAG_DIR/weights.npz
-$SPACY_ONTONOTES_DIR
-$SPACY_ONTONOTES_DIR/features.msgpack
-$SPACY_ONTONOTES_DIR/weights.npz
-data/pkusegscores.json
-"
-
-# Validate extra data files exist
-echo "STEP 5: Validate data files exist."
-fail=false
-for item in $check_list; do
-    if [ ! -e "$item" ]; then
-        echo "ERROR: ❌ $item not found"
-        fail=true
-    fi
-done
- 
-if [ "$fail" = true ]; then
-    echo "ERROR: ❌ Data files check failed. Exiting."
-    exit 1
-else
-    echo "INFO: ✅ Data files all exist."
-fi
 
 # Install Python dependencies
 echo "STEP 6: Install Python dependencies."
