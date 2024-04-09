@@ -1,0 +1,49 @@
+# To install pytorch cuda (gpu) version, please look https://pytorch.org/
+
+PyQt6-Qt6==6.4.2    # for qt>6.4.2 , framelesswindow is broken on windows, and text rendering is wrong on macOS
+PyQt6==6.4.2   #PyQt5>=5.15.9
+numpy
+urllib3==1.25.11 # https://github.com/psf/requests/issues/5740
+jaconv
+torch
+torchvision
+transformers
+fugashi
+unidic_lite
+tqdm
+opencv-python
+shapely
+pyclipper
+einops
+termcolor
+bs4
+deepl
+qtpy
+spacy-pkuseg
+sentencepiece
+ctranslate2
+python-docx
+docx2txt
+piexif
+keyboard
+ordered-set
+opencc-python-reimplemented
+requests
+Pillow
+beautifulsoup4
+colorama
+openai
+pyyaml
+natsort
+py7zr
+multivolumefile
+httpx[socks,brotli]
+langdetect
+pywin32; sys_platform == 'win32'
+winsdk; sys_platform == 'win32'
+brotlicffi; sys_platform == 'win32'
+pyobjc-core; sys_platform == 'darwin'
+pyobjc-framework-cocoa; sys_platform == 'darwin'
+pyobjc-framework-coreml; sys_platform == 'darwin'
+pyobjc-framework-quartz; sys_platform == 'darwin'
+pyobjc-framework-vision; sys_platform == 'darwin'
