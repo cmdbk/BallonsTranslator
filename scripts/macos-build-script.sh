@@ -1,5 +1,5 @@
 # Create and activate Python virtual environment
-echo "STEP 2: Create and activate Python virtual environment"
+echo "STEP 1: Create and activate Python virtual environment"
 python_version=$(python3 -V 2>&1 | cut -d" " -f2 | cut -d"." -f1-2)
 
 if ! which python3 >/dev/null 2>&1; then
@@ -22,19 +22,19 @@ else
 fi
 
 # Install Python dependencies
-echo "STEP 6: Install Python dependencies."
+echo "STEP 2: Install Python dependencies."
 pip3 install -r requirements.txt
 pip3 install pyinstaller
 
 # Delete .DS_Store files 
-echo "STEP 7: Delete .DS_Store files."
+echo "STEP 3: Delete .DS_Store files."
 echo "INFO: Permission required to delete .DS_Store files."
 sudo find ./ -name '.DS_Store'
 sudo find ./ -name '.DS_Store' -delete
 echo "INFO: ✅ .DS_Store files all deleted."
 
 # Create packaged app
-echo "STEP 8: Create packaged app."
+echo "STEP 4: Create packaged app."
 echo "INFO: Use the pyinstaller spec file to bundle the app."
 sudo pyinstaller launch.spec
 
