@@ -16,10 +16,6 @@ source 'venv/bin/activate'
 pip install -r requirements.txt
 pip install pyinstaller
 
-# Copy required directories to data
-ditto ../libs data/libs -V
-ditto ../models data/models -V
-
 # Delete all .DS_Store
 sudo find ./ -name '.DS_Store' -delete
 
