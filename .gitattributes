@@ -1,1 +1,14 @@
-* filter=lfs diff=lfs merge=lfs -text
+data/libs/libopencv_world.4.4.0.dylib filter=lfs diff=lfs merge=lfs -text
+data/models/aot_inpainter.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/comictextdetector.pt filter=lfs diff=lfs merge=lfs -text
+data/models/comictextdetector.pt.onnx filter=lfs diff=lfs merge=lfs -text
+data/models/lama_large_512px.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/lama_mpe.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/mit32px_ocr.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/mit48pxctc_ocr.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/ocr_ar_48px.ckpt filter=lfs diff=lfs merge=lfs -text
+data/models/manga-ocr-base/pytorch_model.bin filter=lfs diff=lfs merge=lfs -text
+data/models/pkuseg/postag.zip filter=lfs diff=lfs merge=lfs -text
+data/models/pkuseg/postag/weights.npz filter=lfs diff=lfs merge=lfs -text
+data/models/pkuseg/spacy_ontonotes/features.msgpack filter=lfs diff=lfs merge=lfs -text
+data/models/pkuseg/spacy_ontonotes/weights.npz filter=lfs diff=lfs merge=lfs -text
