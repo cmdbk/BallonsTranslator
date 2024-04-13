@@ -1,15 +1,1 @@
-libopencv_world.4.4.0.dylib filter=lfs diff=lfs merge=lfs -text
-aot_inpainter.ckpt filter=lfs diff=lfs merge=lfs -text
-comictextdetector.pt filter=lfs diff=lfs merge=lfs -text
-comictextdetector.pt.onnx filter=lfs diff=lfs merge=lfs -text
-lama_large_512px.ckpt filter=lfs diff=lfs merge=lfs -text
-lama_mpe.ckpt filter=lfs diff=lfs merge=lfs -text
-mit32px_ocr.ckpt filter=lfs diff=lfs merge=lfs -text
-mit48pxctc_ocr.ckpt filter=lfs diff=lfs merge=lfs -text
-ocr_ar_48px.ckpt filter=lfs diff=lfs merge=lfs -text
-pytorch_model.bin filter=lfs diff=lfs merge=lfs -text
-postag.zip filter=lfs diff=lfs merge=lfs -text
-weights.npz filter=lfs diff=lfs merge=lfs -text
-features.msgpack filter=lfs diff=lfs merge=lfs -text
-weights.npz filter=lfs diff=lfs merge=lfs -text
-*. filter=lfs diff=lfs merge=lfs -text
+* filter=lfs diff=lfs merge=lfs -text
